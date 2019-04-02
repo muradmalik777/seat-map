@@ -16,14 +16,14 @@
                     <h3>Available</h3>
                 </div>
                 <div class="seat-map" style="position: relative;">
-                    <span class="seat" v-for="(item, index) in seats" :key="index" :style="seatPosition(item)">
-                        <i class="fas fa-chair seat" :class="{'filled': item.IsFree === 'O', 'empty': item.IsFree === 'N'}" @click="handleClick(item)"></i>
+                    <span class="seat-wrap" v-for="(item, index) in seats" :key="index" :style="seatPosition(item)" @click="handleClick(item)">
+                        <span class="seat-num">{{item.Row}}{{item.Seat}}</span>
+                        <i class="fas fa-chair seat" :class="{'filled': item.IsFree === 'O', 'empty': item.IsFree === 'N'}"></i>
                     </span>
                     <v-dialog v-model="dialog" width="500">
                         <v-card v-if="this.selectedSeat">
                             <v-card-title class="headline grey lighten-2" primary-title>Seat Number: {{this.selectedSeat.Seat}}</v-card-title>
                             <v-card-text>
-                            <p>{{this.selectedSeat}}</p>
                             <p>Category ID: {{this.selectedSeat.CategoryID}}</p>
                             <p>Floor ID: {{this.selectedSeat.FloorID}}</p>
                             <p>Index: {{this.selectedSeat.IIndex}}</p>
@@ -66,8 +66,8 @@ export default {
         seatPosition: function(seat){
             return {
                 position: 'absolute',
-                left: (seat.pos_x * 2) + 'rem',
-                top: (seat.pos_y * 1.5) + 'rem',
+                left: (seat.pos_x * 3.5) + 'rem',
+                top: (seat.pos_y * 1.8) + 'rem',
             }
         },
         handleClick: function(item){
@@ -113,15 +113,26 @@ h1{
     }
 }
 .seat-map{
-    width: 1200px;
-    min-height: 95vh;
+    width: 1360px;
+    min-height: 115vh;
     margin: auto;
     border: 1px solid grey;
+    box-sizing: border-box;
 
-    .seat{
-        font-size: 18px;
-        margin: -6.5rem -3rem;
+    .seat-wrap{
         cursor: pointer;
+        margin: -10rem -35rem;
+    }
+    .seat-num{
+        width: 50%;
+        float: left;
+        font-size: 12px;
+        padding-right:14px; 
+    }
+    .seat{
+        width: 50%;
+        float: left;
+        font-size: 18px;
     }
     .filled{
         color: rgb(255, 75, 75);
