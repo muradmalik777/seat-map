@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container style="background: #fff;">
         <v-layout row>
             <v-flex xs12>
                 <h1>Seat Map</h1>
@@ -16,13 +16,16 @@
                     <h3>Available</h3>
                 </div>
                 <div class="seat-map" style="position: relative;">
-                    <span class="seat-wrap" v-for="(item, index) in seats" :key="index" :style="seatPosition(item)" @click="handleClick(item)">
-                        <span class="seat-num">{{item.Row}}{{item.Seat}}</span>
-                        <i class="fas fa-chair seat" :class="{'filled': item.IsFree === 'O', 'empty': item.IsFree === 'N'}"></i>
+                    <span class="seat-wrap" v-for="seat in positions" :style="seatPosition(seat)" @click="handleClick(seat)">
+                        <span class="seat-num">{{seat.Seat}}</span>
+                        <i class="fas fa-chair seat" :class="{'filled': checkIfFilled(seat.SeatID), 'empty': checkIfEmpty(seat.SeatID), 'east':getEast(seat), 'north':getNorth(seat), 'west':getWest(seat)}"></i>
+                    </span>
+                    <span class="text" v-for="letter in text" :style="textPosition(letter)">
+                        {{letter.text}}
                     </span>
                     <v-dialog v-model="dialog" width="500">
                         <v-card v-if="this.selectedSeat">
-                            <v-card-title class="headline grey lighten-2" primary-title>Seat Number: {{this.selectedSeat.Seat}}</v-card-title>
+                            <v-card-title class="headline grey lighten-2" primary-title>Seat Number: {{this.selectedSeat.Row+this.selectedSeat.Seat}}</v-card-title>
                             <v-card-text>
                             <p>Category ID: {{this.selectedSeat.CategoryID}}</p>
                             <p>Floor ID: {{this.selectedSeat.FloorID}}</p>
@@ -48,32 +51,61 @@
     </v-container>
 </template>
 <script>
-import mapData from '@/resource/mapData.json';
+import positions from '@/resource/positions.json';
+import seatdata from '@/resource/seatdata.json';
+
 export default {
     name: 'home',
     data: function(){
         return{
-            data: mapData,
-            seats: mapData.diffgram.NewDataSet.Seats,
+            seatdata: seatdata.diffgram.NewDataSet.Seats,
+            positions: positions.diffgram.NewDataSet,
+            text: seatdata.diffgram.NewDataSet.Texts,
             dialog: false,
             selectedSeat: null
         }
     },
     mounted: function(){
-        console.log(this.data.diffgram.NewDataSet.Seats)
+
     },
     methods: {
         seatPosition: function(seat){
             return {
                 position: 'absolute',
-                left: (seat.pos_x * 3.5) + 'rem',
-                top: (seat.pos_y * 1.8) + 'rem',
+                left: (seat.pos_x * 50) + 'px',
+                top: (seat.pos_y * 30) + 'px',
+            }
+        },
+        textPosition: function(text){
+            return {
+                position: 'absolute',
+                left: (text.pos_x * 50) + 'px',
+                top: (text.pos_y * 30) + 'px',
             }
         },
         handleClick: function(item){
             this.dialog = true
             this.selectedSeat = item
-        }
+        },
+        getEast: function(item){
+            return item.orientation === 'E' ? true : false
+        },
+        getWest: function(item){
+            return item.orientation === 'W' ? true : false
+        },
+        getNorth: function(item){
+            return item.orientation === 'N' ? true : false
+        },
+        checkIfFilled: function(id){
+            if(this.seatdata.find(item=>item.SeatID===id && item.IsFree==="O")){
+                return true
+            }
+        },
+        checkIfEmpty: function(id){
+            if(this.seatdata.find(item=>item.SeatID===id && item.IsFree==="N")){
+                return true
+            }
+        },
     }
     
 }
@@ -113,26 +145,27 @@ h1{
     }
 }
 .seat-map{
-    width: 1360px;
-    min-height: 115vh;
+    width: 1560px;
+    min-height: 125vh;
     margin: auto;
-    border: 1px solid grey;
-    box-sizing: border-box;
 
     .seat-wrap{
         cursor: pointer;
-        margin: -10rem -35rem;
+        margin: 1rem -16rem;
+    }
+    .text{
+        margin: 1rem -15rem;
     }
     .seat-num{
         width: 50%;
         float: left;
         font-size: 12px;
-        padding-right:14px; 
+        padding-right: 10px;
     }
     .seat{
         width: 50%;
         float: left;
-        font-size: 18px;
+        font-size: 16px;
     }
     .filled{
         color: rgb(255, 75, 75);
