@@ -1,54 +1,56 @@
 <template>
-    <v-container style="background: #fff;">
-        <v-layout row>
-            <v-flex xs12>
-                <h1>Seat Map</h1>
-                <div class="colors">
-                    <div class="box blue">
+    <div>
+        <h1>Seat Map</h1>
+        <div class="colors">
+            <div class="box blue">
 
-                    </div>
-                    <h3>Filled</h3>
-                </div>
-                <div class="colors">
-                    <div class="box red">
+            </div>
+            <h3>Filled</h3>
+        </div>
+        <div class="colors">
+            <div class="box red">
 
-                    </div>
-                    <h3>Available</h3>
-                </div>
-                <div class="seat-map" style="position: relative;">
-                    <span class="seat-wrap" v-for="seat in positions" :style="seatPosition(seat)" @click="handleClick(seat)">
-                        <span class="seat-num">{{seat.Seat}}</span>
-                        <i class="fas fa-chair seat" :class="{'filled': checkIfFilled(seat.SeatID), 'empty': checkIfEmpty(seat.SeatID), 'east':getEast(seat), 'north':getNorth(seat), 'west':getWest(seat)}"></i>
-                    </span>
-                    <span class="text" v-for="letter in text" :style="textPosition(letter)">
-                        {{letter.text}}
-                    </span>
-                    <v-dialog v-model="dialog" width="500">
-                        <v-card v-if="this.selectedSeat">
-                            <v-card-title class="headline grey lighten-2" primary-title>Seat Number: {{this.selectedSeat.Row+this.selectedSeat.Seat}}</v-card-title>
-                            <v-card-text>
-                            <p>Category ID: {{this.selectedSeat.CategoryID}}</p>
-                            <p>Floor ID: {{this.selectedSeat.FloorID}}</p>
-                            <p>Index: {{this.selectedSeat.IIndex}}</p>
-                            <p>Availability: {{this.selectedSeat.IsFree}}</p>
-                            <p>Reserve ID: {{this.selectedSeat.ReserveID}}</p>
-                            <p>Row Number: {{this.selectedSeat.Row}}</p>
-                            <p>Seat Domination ID: {{this.selectedSeat.SeatDominationID}}</p>
-                            <p>Seat ID: {{this.selectedSeat.SeatID}}</p>
-                            <p>Section ID: {{this.selectedSeat.SectionID}}</p>
-                            <p>Orientation: {{this.selectedSeat.orientation}}</p>
-                            </v-card-text>
-                            <v-divider></v-divider>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn flat small @click="dialog=false"> Close </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </div>
-            </v-flex>
-        </v-layout>
-    </v-container>
+            </div>
+            <h3>Available</h3>
+        </div>
+        <div class="seat-map" style="position: relative;">
+            <span class="seat-wrap" v-for="seat in positions" :style="seatPosition(seat)" @click="handleClick(seat)">
+                <span class="seat-num">{{seat.Seat}}</span>
+                <i v-if="seat.SeatState === 'R'" class="fas fa-male seat-state" style="font-size:8px"></i>
+                <i v-if="seat.SeatState === 'I' || seat.SeatState === 'X'" class="fas fa-ban seat-state" style="font-size:8px"></i>
+                <i v-if="seat.SeatState === 'P'" class="fas fa-euro-sign seat-state" style="font-size:8px"></i>
+                <i v-if="seat.SeatState === 'B'" class="fas fa-ticket-alt seat-state" style="font-size:8px"></i>
+
+                <i v-if="seat.SeatDenominationName === 'FAUTEUIL'" class="fas fa-couch seat" :class="{'orange': orange(seat), 'red': red(seat), 'blue': blue(seat), 'yellow': yellow(seat), 'pink': pink(seat), 'east':getEast(seat), 'north':getNorth(seat), 'west':getWest(seat)}"></i>
+                <i v-else class="fas fa-chair seat" :class="{'orange': orange(seat), 'red': red(seat), 'blue': blue(seat), 'yellow': yellow(seat), 'pink': pink(seat), 'east':getEast(seat), 'north':getNorth(seat), 'west':getWest(seat)}"></i>
+            </span>
+            <span class="text" v-for="letter in text" :style="textPosition(letter)">
+                {{letter.text}}
+            </span>
+            <v-dialog v-model="dialog" width="500">
+                <v-card v-if="this.selectedSeat">
+                    <v-card-title class="headline grey lighten-2" primary-title>Seat Number: {{this.selectedSeat.Row+this.selectedSeat.Seat}}</v-card-title>
+                    <v-card-text>
+                    <p>Category ID: {{this.selectedSeat.CategoryID}}</p>
+                    <p>Floor ID: {{this.selectedSeat.FloorID}}</p>
+                    <p>Index: {{this.selectedSeat.IIndex}}</p>
+                    <p>Availability: {{this.selectedSeat.IsFree}}</p>
+                    <p>Reserve ID: {{this.selectedSeat.ReserveID}}</p>
+                    <p>Row Number: {{this.selectedSeat.Row}}</p>
+                    <p>Seat Domination ID: {{this.selectedSeat.SeatDominationID}}</p>
+                    <p>Seat ID: {{this.selectedSeat.SeatID}}</p>
+                    <p>Section ID: {{this.selectedSeat.SectionID}}</p>
+                    <p>Orientation: {{this.selectedSeat.orientation}}</p>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn flat small @click="dialog=false"> Close </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </div>
+    </div>
 </template>
 <script>
 import positions from '@/resource/positions.json';
@@ -72,14 +74,14 @@ export default {
         seatPosition: function(seat){
             return {
                 position: 'absolute',
-                left: (seat.pos_x * 50) + 'px',
+                left: (seat.pos_x * 70) + 'px',
                 top: (seat.pos_y * 30) + 'px',
             }
         },
         textPosition: function(text){
             return {
                 position: 'absolute',
-                left: (text.pos_x * 50) + 'px',
+                left: (text.pos_x * 70) + 'px',
                 top: (text.pos_y * 30) + 'px',
             }
         },
@@ -96,8 +98,28 @@ export default {
         getNorth: function(item){
             return item.orientation === 'N' ? true : false
         },
-        checkIfFilled: function(id){
-            if(this.seatdata.find(item=>item.SeatID===id && item.IsFree==="O")){
+        orange: function(seat){
+            if(seat.CategoryName === 'CARRE OR'){
+                return true
+            }
+        },
+        red: function(seat){
+            if(seat.CategoryName === '1ERE CATEGORIE'){
+                return true
+            }
+        },
+        blue: function(seat){
+            if(seat.CategoryName === '2EME CATEGORIE'){
+                return true
+            }
+        },
+        yellow: function(seat){
+            if(seat.CategoryName === '3EME CATEGORIE'){
+                return true
+            }
+        },
+        pink: function(seat){
+            if(seat.CategoryName === 'UNIQUE'){
                 return true
             }
         },
@@ -151,27 +173,40 @@ h1{
 
     .seat-wrap{
         cursor: pointer;
-        margin: 1rem -16rem;
+        margin: 1rem -46rem;
     }
     .text{
-        margin: 1rem -15rem;
+        margin: 1rem -45rem;
+    }
+    .seat-state{
+        width: 15%;
+        padding-left: 1px;
     }
     .seat-num{
-        width: 50%;
+        width: 35%;
         float: left;
         font-size: 12px;
-        padding-right: 10px;
+        padding-right: 12px;
     }
     .seat{
         width: 50%;
         float: left;
         font-size: 16px;
     }
-    .filled{
-        color: rgb(255, 75, 75);
+    .orange{
+        color: orange;
     }
-    .empty{
-        color: rgb(48, 48, 253);
+    .red{
+        color: red;
+    }
+    .blue{
+        color: blue;
+    }
+    .yellow{
+        color: yellow;
+    }
+    .pink{
+        color: pink;
     }
     .north{
         transform: rotate(180deg)
