@@ -2,16 +2,40 @@
     <div>
         <h1>Seat Map</h1>
         <div class="colors">
-            <div class="box blue">
-
-            </div>
-            <h3>Filled</h3>
+            <div class="box orange"></div>
+            <h3>CARRE OR</h3>
         </div>
         <div class="colors">
-            <div class="box red">
-
-            </div>
-            <h3>Available</h3>
+            <div class="box red"></div>
+            <h3>1ERE CATEGORIE</h3>
+        </div>
+        <div class="colors">
+            <div class="box blue"></div>
+            <h3>2EME CATEGORIE</h3>
+        </div>
+        <div class="colors">
+            <div class="box yellow"></div>
+            <h3>3EME CATEGORIE</h3>
+        </div>
+        <div class="colors">
+            <div class="box pink"></div>
+            <h3>UNIQUE</h3>
+        </div>
+        <div class="colors">
+            <i class="fas fa-male" style="font-size:24px; padding-top:3px;"></i>
+            <h3>Reserved</h3>
+        </div>
+        <div class="colors">
+            <i class="fas fa-ban" style="font-size:20px; padding-top:3px;"></i> 
+            <h3>Not Available</h3>
+        </div>
+        <div class="colors">
+            <i class="fas fa-euro-sign" style="font-size:20px; padding-top:3px;"></i> 
+            <h3>Paid</h3>
+        </div>
+        <div class="colors">
+            <i class="fas fa-ticket-alt" style="font-size:20px; padding-top:3px;"></i>
+            <h3>Edited</h3>
         </div>
         <div class="seat-map" style="position: relative;">
             <span class="seat-wrap" v-for="seat in positions" :style="seatPosition(seat)" @click="handleClick(seat)">
@@ -93,7 +117,7 @@ export default {
             return item.orientation === 'E' ? true : false
         },
         getWest: function(item){
-            return item.orientation === 'W' ? true : false
+            return item.orientation === 'O' ? true : false
         },
         getNorth: function(item){
             return item.orientation === 'N' ? true : false
@@ -144,7 +168,7 @@ h1{
     }
 }
 .colors{
-    width: 200px;
+    width: 300px;
     height: 40px;
     padding: 10px;
 
@@ -155,10 +179,19 @@ h1{
         margin: 5px;
     }
     .box.red{
-        background: rgb(255, 75, 75);
+        background: red;
     }
     .box.blue{
-        background: rgb(48, 48, 253);
+        background: blue;
+    }
+    .box.yellow{
+        background: rgb(240, 240, 2);
+    }
+    .box.orange{
+        background: orange;
+    }
+    .box.pink{
+        background: pink;
     }
     h3{
         width: fit-content;
@@ -173,10 +206,10 @@ h1{
 
     .seat-wrap{
         cursor: pointer;
-        margin: 1rem -46rem;
+        margin: -35rem -150rem;
     }
     .text{
-        margin: 1rem -45rem;
+        margin: -35rem -150rem;
     }
     .seat-state{
         width: 15%;
@@ -203,7 +236,7 @@ h1{
         color: blue;
     }
     .yellow{
-        color: yellow;
+        color: rgb(233, 233, 6);
     }
     .pink{
         color: pink;
