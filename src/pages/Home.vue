@@ -117,7 +117,7 @@ export default {
             return item.orientation === 'E' ? true : false
         },
         getWest: function(item){
-            return item.orientation === 'W' ? true : false
+            return item.orientation === 'O' ? true : false
         },
         getNorth: function(item){
             return item.orientation === 'N' ? true : false
@@ -206,7 +206,7 @@ h1{
 
     .seat-wrap{
         cursor: pointer;
-        margin: -35rem -100rem;
+        margin: -35rem -150rem;
     }
     .text{
         margin: -35rem -150rem;
